@@ -17,14 +17,11 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.*
 import kotlinx.android.synthetic.main.activity_image.*
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
-import androidx.core.content.ContextCompat.checkSelfPermission as checkSelfPermission1
 
-
-@Suppress("DEPRECATION")
+//@Suppress("DEPRECATION")
 class ImageActivity : AppCompatActivity() {
 
     var selectedBitmap : Bitmap? = null
@@ -119,19 +116,19 @@ class ImageActivity : AppCompatActivity() {
     fun makeSmallerBitmap(image: Bitmap, maximumSize: Int) : Bitmap{
 
         var width = image.width
-        var heigh = image.height
+        var height = image.height
 
-        val bitmapRatio: Double = width.toDouble() / heigh.toDouble()
+        val bitmapRatio: Double = width.toDouble() / height.toDouble()
         if (bitmapRatio > 1){
             width = maximumSize
             val scaleHeight = width / bitmapRatio
-            heigh = scaleHeight.toInt()
+            height = scaleHeight.toInt()
         }else{
-            heigh = maximumSize
-            val scaleWidth = heigh * bitmapRatio
+            height = maximumSize
+            val scaleWidth = height * bitmapRatio
             width = scaleWidth.toInt()
         }
-        return Bitmap.createScaledBitmap(image, width, heigh, true)
+        return Bitmap.createScaledBitmap(image, width, height, true)
     }
 
     fun selectImage(view: View){
@@ -167,7 +164,7 @@ class ImageActivity : AppCompatActivity() {
             try {
 
                 if (selectedPicture != null){
-                    if (Build.VERSION.SDK_INT >= 20){
+                    if (android.os.Build.VERSION.SDK_INT >= 29){
                         val source = ImageDecoder.createSource(this.contentResolver, selectedPicture!!)
                         selectedBitmap = ImageDecoder.decodeBitmap(source)
                         imageView.setImageBitmap(selectedBitmap)
@@ -186,81 +183,4 @@ class ImageActivity : AppCompatActivity() {
     }
 
 
-
-
-//    @RequiresApi(Build.VERSION_CODES.M)
-//    fun selectImage(view: View){
-//        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-//            //Request permission
-//            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 2)
-//
-//        }else{
-//            //Pick the picture from the external content
-//            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-//            startActivityForResult(intent, 1)
-//        }
-//
-//    }
-//
-//    override fun onRequestPermissionsResult( requestCode: Int,permissions: Array<out String>, grantResults: IntArray) {
-//
-//        if (requestCode == 2){
-//
-//            if (grantResults.size > 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-//                //Pick the picture from the external content
-//                val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-//                startActivityForResult(intent, 1)
-//            }
-//        }
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-//    }
-//
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//
-//        if (requestCode == 1 && resultCode == Activity.RESULT_OK && data != null){
-//            //convert image into data
-//            var image = data.data
-//
-//            try {
-//                val selectedImage = MediaStore.Images.Media.getBitmap(this.contentResolver, image)
-//                imageView.setImageBitmap(selectedImage)
-//            }catch(e:Exception){
-//                e.printStackTrace()
-//            }
-//        }
-//
-//        super.onActivityResult(requestCode, resultCode, data)
-//    }
-//
-//    fun save_image(view: View){
-//
-//        val artName = txtGameName.text.toString()
-//
-//        val outputStream = ByteArrayOutputStream()
-//        //Compress image to png format
-//        selectedBitmap?.compress(Bitmap.CompressFormat.PNG, 50, outputStream)
-//        val byteArray = outputStream.toByteArray()
-//
-//        try {
-//            val database = this.openOrCreateDatabase("Arts", Context.MODE_PRIVATE, null)
-//            //Create table to store name and the picture
-//            database.execSQL("CREATE TABLE IF NOT EXISTS arts (name VARCHAR, image BLOB)")
-//            //Insert data to database
-//            val sqlString = "INSERT INTO arts (name, image) VALUES (? , ?)"
-//            val statement = database.compileStatement(sqlString)
-//
-//            statement.bindString(1, artName)
-//            statement.bindBlob(2, byteArray)
-//            statement.execute()
-//
-//
-//        }catch (e: Exception){
-//            e.printStackTrace()
-//        }
-//
-//        val intent = Intent(applicationContext, MainActivity::class.java)
-//        startActivity(intent)
-//
-//
-//    }
 }
